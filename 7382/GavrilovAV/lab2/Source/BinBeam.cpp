@@ -54,10 +54,16 @@ class BinBeam{
 		return std::holds_alternative<unsigned int>(cargoRight);
 	};
 	BinBeam *getRightBeam(){
-		return std::get<BinBeam *>(cargoRight);
+		if(!isRightInt())
+			return std::get<BinBeam *>(cargoRight);
+		else 
+			return nullptr;
 	};
 	BinBeam *getLeftBeam(){
-		return std::get<BinBeam *>(cargoLeft);
+		if(!isLeftInt())
+			return std::get<BinBeam *>(cargoLeft);
+		else 
+			return nullptr;
 	};
 	~BinBeam(){
 		if(!isLeftInt())

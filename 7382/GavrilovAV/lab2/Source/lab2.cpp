@@ -152,7 +152,7 @@ bool isBeam(std::string str){
  * otherwise writs the number of wights in the binary beam.
  */
 int main(){
-	std::cout<<"Enter the converting to the binary beam string:"<<std::enld;
+	std::cout<<"Enter the converting to the binary beam string:"<<std::endl;
         std::string str;
         std::getline(std::cin, str);
 	str=std::regex_replace(str,std::regex("[^()0-9,]*"), "");
