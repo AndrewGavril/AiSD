@@ -16,6 +16,12 @@ class BinBeam{
 	std::variant<unsigned int, BinBeam*>cargoLeft;
 	std::variant<unsigned int ,BinBeam*>cargoRight;
 	public:
+	BinBeam(){
+		leftShoulder=0;
+		rightShoulder=0;
+		cargoLeft=0;
+		cargoRight=0;
+	}
 	BinBeam(std::string str){
 		str.replace(str.begin(), str.begin()+1, "");
                 str.replace(str.end()-1,str.end(),"");
@@ -53,6 +59,11 @@ class BinBeam{
 	BinBeam *getLeftBeam(){
 		return std::get<BinBeam *>(cargoLeft);
 	};
-	
+	~BinBeam(){
+		if(!isLeftInt())
+			delete std::get<BinBeam *>(cargoLeft);
+		if(!isRightInt())
+			delete std::get<BinBeam *>(cargoRight);
+	};
 
 };
