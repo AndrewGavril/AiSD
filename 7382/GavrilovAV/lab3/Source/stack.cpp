@@ -1,4 +1,5 @@
 #include <iostream>
+//#define TEST
 //Stack class for the char elements
 class Stack{
 	char *arr;
@@ -22,7 +23,9 @@ class Stack{
 		delete[] arr;
 	}
 	void push(char el){	//This function pushs element to stack
+#ifdef TEST	
 		std::cout<<"\tPush element: "<<el<<std::endl;
+#endif	
 		if(elNum<size){
 			arr[elNum]=el;
 			elNum++;
@@ -39,6 +42,9 @@ class Stack{
 			char el=arr[elNum-1];
 			arr[elNum-1]='\0';
 			elNum--;
+#ifdef TEST
+			std::cout<<"Pop element: \'"<<el<<"\'"<<std::endl;
+#endif
 			return el;
 		}
 		else{

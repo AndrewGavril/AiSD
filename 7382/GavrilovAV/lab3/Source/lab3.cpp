@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include "stack.cpp"
-//#define USER
-#define TEST
+#define USER
+//#define TEST
 
 /*Function readLE checks the string for the correct symbols of
  *operations and arguments. If an argument or a symbol is correct
@@ -37,15 +37,25 @@ bool readLE(std::string str, Stack *stack){
 			numCl++;
 			continue;
 		}
-		if(str.find("true", i, 4)!=std::string::npos){
-			i+=4;
-			stack->push('t');
-			continue;
-		}
-		if(str.find("false", i, 5)!=std::string::npos){
-			i+=5;
-			stack->push('f');
-			continue;
+		if(str[i]=='f'){
+			if(str.substr(i,5)=="false"){
+                        	i+=5;
+                        	stack->push('f');
+                        	continue;
+			}
+			else{
+				return false;
+			}
+                }
+		if(str[i]=='t'){
+			if(str.substr(i, 4)=="true"){
+				i+=4;
+				stack->push('t');
+				continue;
+			}
+			else{
+				return false;
+			}
 		}
 		else{
 			return false;
@@ -61,31 +71,91 @@ bool readLE(std::string str, Stack *stack){
  * is wrong and the function can't calcculate it, the program is closing with
  * an error.
  */
-bool calc(Stack *stack){
+bool calc(Stack *stack, int depth){
+#ifdef TEST
+	for(int i=0;i<depth;i++){
+		std::cout<<"\t";
+	}
+	std::cout<<"Calculating LE"<<std::endl;
+        for(int i=0;i<depth+1;i++){
+                std::cout<<"\t";
+        }
+#endif
 	char el=stack->pop();
 	bool res;
 	if(el=='t'){
+#ifdef TEST
+                        for(int i=0;i<depth;i++){
+                                std::cout<<"\t";
+                        }
+                        std::cout<<"Result: 1"<<std::endl;
+#endif
 		return true;
 	}
 	if(el=='f'){
-                return false;
+#ifdef TEST
+                        for(int i=0;i<depth;i++){
+                                std::cout<<"\t";
+                        }
+                        std::cout<<"Result: 0"<<std::endl;
+#endif
+		return false;
         }
 	if(el==')' && stack->count()>2){
-		bool fstLE=calc(stack);
+		bool fstLE=calc(stack, depth+1);
+#ifdef TEST
+                for(int i=0;i<depth;i++){
+                        std::cout<<"\t";
+                }
+#endif
 		el=stack->pop();
 		if(el=='!'){
 			res = !fstLE;
+#ifdef TEST
+                for(int i=0;i<depth;i++){
+                        std::cout<<"\t";
+                }
+#endif
+
 			stack->pop();
+#ifdef TEST
+	                for(int i=0;i<depth;i++){
+        	                std::cout<<"\t";
+                	}
+			std::cout<<"Result: "<<(bool)res<<std::endl;
+#endif
 			return res;
 		}
 		if(el=='|'){
-			res= fstLE | calc(stack);
+			res= fstLE | calc(stack,depth+1);
+#ifdef TEST
+                for(int i=0;i<depth;i++){
+                        std::cout<<"\t";
+                }
+#endif
 			stack->pop();
+#ifdef TEST
+                        for(int i=0;i<depth;i++){
+                                std::cout<<"\t";
+                        }
+                        std::cout<<"Result: "<<(bool)res<<std::endl;
+#endif
 			return res;
 		}
 		if(el=='&'){
-			res= fstLE & calc(stack);
+			res= fstLE & calc(stack, depth+1);
+#ifdef TEST
+                for(int i=0;i<depth;i++){
+                        std::cout<<"\t";
+                }
+#endif
 			stack->pop();
+#ifdef TEST
+                        for(int i=0;i<depth;i++){
+                                std::cout<<"\t";
+                        }
+                        std::cout<<"Result: "<<(bool)res<<std::endl;
+#endif
 			return res;
 		}
 	}
@@ -115,15 +185,21 @@ int main(){
 		return 0;
 	}
 	std::getline(file, str);
+	std::cout<<"Your logical expression: \""<<str<<"\""<<std::endl;
 	file.close();
 #endif
 	bool res;
 	if(readLE(str, stack)){
-		res=calc(stack);
-		if(stack->isEmpty())
-			std::cout<<"Result: "<<res<<std::endl;
-		else
+		res=calc(stack, 0);
+		if(stack->isEmpty()){
+			if(res)
+				std::cout<<"Result: true."<<std::endl;
+			else
+				std::cout<<"Result: false."<<std::endl;
+		}
+		else{
 			std::cout<<"Wrong logical expression!"<<std::endl;
+		}
 	}
 	else{
 		std::cout<<"This is not logical expression!"<<std::endl;
